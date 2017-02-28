@@ -14,10 +14,25 @@ def removeNonCT(dir):
     badFiles = []
     for file in os.listdir(dir):
         with open(os.path.join(dir, file), 'r') as f:
-            reader = f.read()
-            mo = re.search('''Type:\s*CT\s*SCAN\s*HEAD''', reader)
+            reader = f.read().lower()
+            mo = re.search('''type:\s*ct\s*scan\s*head''', reader)
             if not mo:
                 badFiles.append(f.name)
 
     for name in badFiles:
+        os.remove(name)
+
+def removeNoSAH(dir):
+
+    noSAHFiles = []
+
+    for file in os.listdir(dir):
+        with open(os.path.join(dir, file), 'r') as f:
+            report = f.read().lower()
+            mo = re.search('''(subarachnoid\s*(hemorrhage|bleed|blood))|(sah)''', report)
+            if not mo:
+                noSAHFiles.append(f.name)
+
+
+    for name in noSAHFiles:
         os.remove(name)
